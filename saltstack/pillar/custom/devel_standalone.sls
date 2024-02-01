@@ -9,5 +9,4 @@
 {% set cycle = 'patch' %} {# Use 'devel' for Spring to Fall, 'patch' for Fall to Spring #}
 {% set name = 'bbs-machine' %}
 {% set immunespace_pwd = '' %}
-{% set create_users = False %}
 {% set machine_type = 'standalone' %}

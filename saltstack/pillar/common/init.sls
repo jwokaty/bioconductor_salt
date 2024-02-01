@@ -1,17 +1,12 @@
 {% from '../custom/init.sls' import branch, version, environment,
    r_download, r_version, r_previous_version, cycle, name,
-   immunespace_pwd, create_users, machine_type %}
+   immunespace_pwd, machine_type %}
 
 {% if machine_type == 'standalone' %}
 {# Assuming salt is run is /Users/a_user or /home/a_user, take the last
    directory as the user name #}
 {% set build_user = grains['cwd'].split("/")[-1] %}
 {% else %}
-{% if create_users %}
-{% from '../custom/init.sls' import biocbuild_password, biocbuild_key,
-   biocbuild_authorized_key, biocpush_password, biocpush_key,
-   biocpush_authorized_key %}
-{% endif %}
 {% set build_user = 'biocbuild' %}
 {% endif %} 
 
@@ -47,7 +42,6 @@ machine:
   ip: 127.0.1.1
   cores: {{ grains['num_cpus'] }}  {# to find out available cores, run cat /proc/cpuinfo | grep processor | wc -l #}
   type: {% if machine_type != "" %}{{ machine_type }}{% else %}secondary{% endif %}
-  create_users: {% if create_users is defined %}{{ create_users }}{% else %}True{% endif %}
   {%- if grains['os'] == 'Ubuntu' %}
   r_path: {{ user_home }}/{{ build_user }}/bbs-{{ version }}-bioc/R/bin/
   groups: 
@@ -63,29 +57,6 @@ machine:
     name: {{ build_user }}
     home: {{ user_home }}
     shell: {{ shell }}
-  users:
-    {% if create_users %}
-    - name: {{ build_user }}
-      key: {{ biocbuild_key }}
-      password: {{ biocbuild_password }}
-      groups:
-        {%- if grains['os'] == 'Ubuntu' %}
-        - biocbuild
-        {% elif grains['os'] == 'MacOS' %}
-        - staff
-        {% endif %}
-      authorized_keys:
-        - {{ biocbuild_authorized_key }}
-    {% if machine_type == 'primary' %}
-    - name: biocpush
-      key: {{ biocpush_key }}
-      password: {{ biocpush_password }}
-      groups:
-        - biocpush
-      authorized_keys:
-        - {{ biocpush_authorized_key }}
-    {% endif %}
-    {% endif %}
 
 r:
   download: {{ r_download }}
