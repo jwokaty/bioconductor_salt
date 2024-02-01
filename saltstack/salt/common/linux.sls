@@ -3,82 +3,8 @@
 # Place an authorized_keys file with core team member public keys in /srv/salt/common/files
 
 {% set machine = salt["pillar.get"]("machine") %}
-{% set build = salt["pillar.get"]("build") %}
 {% set repo = salt["pillar.get"]("repo") %}
 
-{% if machine.type != "standalone" %}
-change_hostname:
-  cmd.run:
-    - name: echo {{ machine.name }} > /etc/hostname
-
-change_host:
-  host.present:
-    - ip: {{ machine.ip }}
-    - names:
-      - {{ machine.name }}
-    - clean: True
-{% endif %}
-
-{% if machine.create_users %}
-{% if machine.additional is defined %}
-{% set groups = machine.groups + machine.additional.groups %}
-{% else %}
-{% set groups = machine.groups %}
-{% endif %}
-
-{%- for group in groups %}
-make_group_{{ group }}:
-  group.present:
-    - name: {{ group }}
-{%- endfor %}
-
-{% if machine.additional is defined %}
-{% set users = machine.users + machine.additional.users %}
-{% else %}
-{% set users = machine.users %}
-{% endif %}
-
-{%- for user in users %}
-make_user_{{ user.name }}:
-  user.present:
-    - name: {{ user.name }}
-    - password: {{ user.password }}
-    - home: {{ machine.user.home }}/{{ user.name }}
-    - shell: {{ machine.user.shell }}
-    - groups:
-    {%- for group in user.groups %}
-      - {{ group }}
-    {%- endfor %}
-
-{%- if user.key is defined %}
-copy_{{ user.name }}_ssh_key:
-  file.managed:
-    - name: {{ machine.user.home }}/{{ user.name }}/.ssh/{{ user.name }}
-    - source: {{ user.key }}
-    - user: {{ user.name }}
-    - group: {{ user.name }}
-    - makedirs: True
-    - mode: 500
-{%- endif %}
-
-{%- if user.authorized_key is defined %}
-copy_{{ user.name }}_authorized_keys:
-  ssh_auth.manage:
-    - user: {{ user.name }}
-    - enc: ssh-rsa
-    - ssh_keys:
-    {%- for authorized_key in user.authorized_keys %}
-      - {{ authorized_key }}
-    {%- endfor %}
-{%- endif %}
-{%- endfor %}
-{%- endif %}
-
-git_clone_{{ repo.bbs.name }}_to_{{ machine.user.home }}/{{ machine.user.name }}:
-  git.cloned:
-    - name: {{ repo.bbs.github }}
-    - target: {{ machine.user.home }}/{{ machine.user.name }}/{{ repo.bbs.name }}
-    - user: {{ machine.user.name }}
 
 install_apt_pkgs:
   cmd.run:
