@@ -9,6 +9,12 @@ base:
     - rlang.linux                               # install R
     - dependencies.bibtex                       # BioC destiny
     - dependencies.libsbml_cflags_libsbml_libs  # BioC rsbml
+  'G@os:MacOS and J@machine:type:^(primary|secondary)$':
+    - match: compound
+    - dependencies.java                         # CRAN rJava
+    - rlang.mac                                 # install R
+    - common.mac.fix_permissions
+    - dependencies.cmake                        # CRAN nloptr
   'os:MacOS':
     - match: grain
     - common.mac.xquartz
@@ -19,14 +25,6 @@ base:
     - common.mac.pip
     - common.mac.mactex
     - common.mac.pandoc
-  'G@os:MacOS and J@machine:type:^(primary|secondary)$':
-    - match: compound 
-    - common.mac.fix_permissions
-    - dependencies.java                         # CRAN rJava
-    - rlang.mac                                 # install R
-    - dependencies.cmake                        # CRAN nloptr
-  'os:MacOS':
-    - match: grain
     - dependencies.jags                         # BioC rjags
     - dependencies.macfuse                      # BioC Travel
     - dependencies.mono                         # BioC rawrr
