@@ -2,16 +2,15 @@
 {% set gfortran_download = machine.downloads.gfortran %}
 {% set gfortran = machine.downloads.gfortran.split("/")[-1] %}
 
-
 download_gfortran:
   cmd.run:
     - name: curl -LO {{ gfortran_download }}
-    - cwd: {{ machine.user.home }}/{{ machine.user.name }}/Downloads
+    - cwd:  /tmp
     - runas: {{ machine.user.name }}
 
 install_gfortran:
   cmd.run:
-    - name: tar -xf {{ machine.user.home }}/{{ machine.user.name }}/Downloads/{{ gfortran }} -C /
+    - name: tar -xf /tmp/{{ gfortran }} -C /
     - require:
       - cmd: download_gfortran
 

@@ -89,7 +89,7 @@ make_{{ build_type }}_bin_macosx_big-sur-arm64_contrib:
 git_bioc_manifest:
   git.cloned:
     - name: {{ repo.manifest.github }}
-    - target: {{ machine.user.home }}/{{ machine.user.name }}/bbs-{{ build.version }}-bioc/{{ repo.manifest.name }}
+    - target: bbs-{{ build.version }}-bioc/{{ repo.manifest.name }}
     - user: {{ machine.user.name }}
     - branch: {{ repo.manifest.branch }}
 {%- endif %}

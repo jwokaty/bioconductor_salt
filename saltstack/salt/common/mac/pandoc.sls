@@ -18,13 +18,13 @@ install_pandoc:
 download_pandoc:
   cmd.run:
     - name: curl -LO {{ machine.downloads.intel.pandoc }}
-    - cwd: {{ machine.user.home }}/{{ machine.user.name }}/Downloads
+    - cwd: /tmp
     - user: {{ machine.user.name }}
 
 install_pandoc:
   cmd.run:
     - name: installer -pkg {{ pandoc }} -target /
-    - cwd: {{ machine.user.home }}/{{ machine.user.name }}/Downloads
+    - cwd: /tmp
     - require:
       - cmd: download_pandoc
 {%- endif %}

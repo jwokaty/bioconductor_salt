@@ -57,6 +57,7 @@ machine:
     name: {{ build_user }}
     home: {{ user_home }}
     shell: {{ shell }}
+  download_path: '{% if machine.type != 'runner' %}{{ user_home }}/{{ build_user }}/Downloads/{% endif %}'
 
 r:
   download: {{ r_download }}

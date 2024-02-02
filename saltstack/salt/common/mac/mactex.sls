@@ -4,12 +4,12 @@
 download_mactex:
   cmd.run:
     - name: curl -LO {{ machine.downloads.mactex }}
-    - cwd:  {{ machine.user.home }}/{{ machine.user.name }}/Downloads
+    - cwd: /tmp
     - runas: {{ machine.user.name }}
 
 install_mactex:
   cmd.run:
     - name: installer -pkg MacTeX.pkg -target /
-    - cwd:  {{ machine.user.home }}/{{ machine.user.name }}/Downloads
+    - cwd: /tmp
     - require:
       - cmd: download_mactex

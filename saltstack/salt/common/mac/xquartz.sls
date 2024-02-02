@@ -5,13 +5,13 @@
 download_XQuartz:
   cmd.run:
     - name: curl -LO {{ machine.downloads.xquartz }}
-    - cwd: {{ machine.user.home }}/{{ machine.user.name }}/Downloads
+    - cwd: /tmp
 
 install_XQuartz:
   cmd.run:
     - name: |
         installer -pkg {{ xquartz }} -target /
-    - cwd: {{ machine.user.home }}/{{ machine.user.name }}/Downloads
+    - cwd: /tmp
     - require:
       - cmd: download_XQuartz
 

@@ -7,7 +7,7 @@
 download_quarto:
   cmd.run:
     - name: curl -LO {{ machine.dependencies.quarto }}
-    - cwd: {% if grains['os'] == 'Ubuntu' %}/tmp{% else %}/{{ machine.user.name }}/Downloads{% endif %}
+    - cwd: /tmp
     - user: {{ machine.user.name }}
 
 {%- if grains['os'] == 'Ubuntu' %}
@@ -21,7 +21,7 @@ install_quarto:
 install_quarto:
   cmd.run:
     - name: installer -pkg {{ quarto }}.pkg -target /
-    - cwd: /{{ machine.user.name }}/Downloads
+    - cwd: /tmp
     - require:
       - cmd: download_quarto
 
